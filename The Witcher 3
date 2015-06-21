@@ -8,8 +8,8 @@ SetBatchLines, -1
 ListLines, off
 DetectHiddenWindows, on
 
-GameExe =  
-GamePath = 
+GamePath =                  ;Set path to game executable here. Not including the .exe file it self!!
+GameExe =  witcher3.exe
 WinTitle = The Witcher 3
 bAutorun = 0
 
