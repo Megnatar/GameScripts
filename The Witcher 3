@@ -1,0 +1,178 @@
+#NoEnv  
+#SingleInstance force
+#InstallKeybdHook
+#InstallMouseHook
+SetKeyDelay, 200, 50
+SetWorkingDir %A_ScriptDir% 
+SetBatchLines, -1 
+ListLines, off
+DetectHiddenWindows, on
+
+GameExe =  
+GamePath = 
+WinTitle = The Witcher 3
+bAutorun = 0
+
+
+GroupAdd, GameWindow, %WinTitle%
+GroupAdd, GameWindow, ahk_exe %GameExe%
+
+IfWinNotExist, ahk_exe %GameExe%
+{
+    run,%GameExe%, %GamePath%,,Process_ID
+    Process, WaitClose, %Process_ID%
+    ExitApp
+}
+else
+IfWinExist, ahk_exe %GameExe%
+{
+    WinActivate, %WinTitle%
+    WinGet, Process_ID, PID, ahk_exe %GameExe%
+    Process, WaitClose, %Process_ID%
+    ExitApp
+}
+#IfWinExist, ahk_group GameWindow
+#IfWinActive, ahk_group GameWindow
+{
+;--------------------------XButton1--------------------------
+XButton1::
+If (bAutorun = 0) {
+    SendEvent, {w down}
+    bAutorun++
+}Else{
+    SendEvent, {w up}
+    bAutorun--
+ }
+Return
+;--------------------------6--------------------------
+~6::
+SendEvent, {Q}
+SendEvent, {5}
+return
+;--------------------------Rbutton--------------------------
+~Rbutton:: 
+if CounterRbt = 1
+{    
+    CounterRbt++
+}
+else
+{
+    CounterRbt = 1
+    KeyWait, Rbutton
+    settimer, ClearCounterRbt, 300
+}
+if CounterRbt = 2
+{
+        SendEvent, {q}
+        CounterRbt =
+        settimer, ClearCounterRbt, off
+}
+else
+return
+;--------------------------W--------------------------
+~W::
+if CounterW = 1
+{    
+    CounterW++
+}
+else
+{
+    CounterW = 1
+    KeyWait, w
+    settimer, ClearCounterW, 300
+}
+if CounterW >= 2
+{
+        SendEvent, +{w}
+        CounterW =
+        settimer, ClearCounterW, off
+}
+else
+return
+;--------------------------A--------------------------
+~A::
+if CounterA = 1
+{    
+    CounterA++
+}
+else
+{
+    CounterA = 1
+    KeyWait, a
+    settimer, ClearCounterA, 300
+}
+if CounterA >= 2
+{
+        SendEvent, +{a}
+        CounterA =
+        settimer, ClearCounterA, off
+}
+else
+return
+;--------------------------S--------------------------
+~S::
+if CounterS = 1
+{    
+    CounterS++
+}
+else
+{
+    CounterS = 1
+    KeyWait, s
+    settimer, ClearCounterS, 300
+}
+if CounterS >= 2
+{
+        SendEvent, +{s}
+        CounterS =
+        settimer, ClearCounterS, off
+}
+else
+return
+;--------------------------D--------------------------
+~D::
+if CounterD = 1
+{    
+    CounterD++
+}
+else
+{
+    CounterD = 1
+    KeyWait, d
+    settimer, ClearCounterD, 300
+}
+if CounterD >= 2
+{
+        SendEvent, +{d}
+        CounterD =
+        settimer, ClearCounterD, off
+}
+else
+return
+;--------------------------ClearCounterRbt--------------------------
+ClearCounterRbt:
+CounterRbt =
+settimer, ClearCounterRbt, off
+Return
+;--------------------------ClearCounterW--------------------------
+ClearCounterW:
+CounterW =
+settimer, ClearCounterW, off
+Return
+;--------------------------ClearCounterA--------------------------
+ClearCounterA:
+CounterA =
+settimer, ClearCounterA, off
+Return
+;--------------------------ClearCounterS--------------------------
+ClearCounterS:
+CounterS =
+settimer, ClearCounterS, off
+Return
+;--------------------------ClearCounterD--------------------------
+ClearCounterD:
+CounterD =
+settimer, ClearCounterD, off
+Return
+}
+
