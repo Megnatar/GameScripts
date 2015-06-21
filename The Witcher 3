@@ -13,7 +13,6 @@ GameExe =  witcher3.exe
 WinTitle = The Witcher 3
 bAutorun = 0
 
-
 GroupAdd, GameWindow, %WinTitle%
 GroupAdd, GameWindow, ahk_exe %GameExe%
 
@@ -34,6 +33,11 @@ IfWinExist, ahk_exe %GameExe%
 #IfWinExist, ahk_group GameWindow
 #IfWinActive, ahk_group GameWindow
 {
+;--------------------------6--------------------------
+~6::
+SendEvent, {Q}
+SendEvent, {5}
+return
 ;--------------------------XButton1--------------------------
 XButton1::
 If (bAutorun = 0) {
@@ -44,11 +48,6 @@ If (bAutorun = 0) {
     bAutorun--
  }
 Return
-;--------------------------6--------------------------
-~6::
-SendEvent, {Q}
-SendEvent, {5}
-return
 ;--------------------------Lbutton--------------------------
 ~Lbutton::
 bAutorun = 0
@@ -56,21 +55,21 @@ SendEvent, {w up}
 return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
-if CounterRbt = 1
+if CounterRbtn = 1
 {    
-    CounterRbt++
+    CounterRbtn++
 }
 else
 {
-    CounterRbt = 1
+    CounterRbtn = 1
     KeyWait, Rbutton
-    settimer, ClearCounterRbt, 300
+    settimer, ClearCounterRbtn, 300
 }
 if CounterRbt = 2
 {
-        SendEvent, {q}
-        CounterRbt =
-        settimer, ClearCounterRbt, off
+    SendEvent, {q}
+    CounterRbtn =
+    settimer, ClearCounterRbtn, off
 }
 else
 return
@@ -89,9 +88,9 @@ else
 }
 if CounterW >= 2
 {
-        SendEvent, +{w}
-        CounterW =
-        settimer, ClearCounterW, off
+    SendEvent, +{w}
+    CounterW =
+    settimer, ClearCounterW, off
 }
 else
 return
@@ -109,9 +108,9 @@ else
 }
 if CounterA >= 2
 {
-        SendEvent, +{a}
-        CounterA =
-        settimer, ClearCounterA, off
+    SendEvent, +{a}
+    CounterA =
+    settimer, ClearCounterA, off
 }
 else
 return
@@ -129,9 +128,9 @@ else
 }
 if CounterS >= 2
 {
-        SendEvent, +{s}
-        CounterS =
-        settimer, ClearCounterS, off
+    SendEvent, +{s}
+    CounterS =
+    settimer, ClearCounterS, off
 }
 else
 return
@@ -149,16 +148,16 @@ else
 }
 if CounterD >= 2
 {
-        SendEvent, +{d}
-        CounterD =
-        settimer, ClearCounterD, off
+    SendEvent, +{d}
+    CounterD =
+    settimer, ClearCounterD, off
 }
 else
 return
-;--------------------------ClearCounterRbt--------------------------
-ClearCounterRbt:
-CounterRbt =
-settimer, ClearCounterRbt, off
+;--------------------------ClearCounterRbtn--------------------------
+ClearCounterRbtn:
+CounterRbtn =
+settimer, ClearCounterRbtn, off
 Return
 ;--------------------------ClearCounterW--------------------------
 ClearCounterW:
