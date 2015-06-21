@@ -49,6 +49,11 @@ Return
 SendEvent, {Q}
 SendEvent, {5}
 return
+;--------------------------Lbutton--------------------------
+~Lbutton::
+bAutorun = 0
+SendEvent, {w up}
+return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
 if CounterRbt = 1
