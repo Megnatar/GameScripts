@@ -71,6 +71,7 @@ else
 return
 ;--------------------------W--------------------------
 ~W::
+bAutorun = 0
 if CounterW = 1
 {    
     CounterW++
