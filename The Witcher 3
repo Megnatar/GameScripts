@@ -65,7 +65,7 @@ else
     KeyWait, Rbutton
     settimer, ClearCounterRbtn, 300
 }
-if CounterRbt = 2
+if CounterRbtn >= 2
 {
     SendEvent, {q}
     CounterRbtn =
