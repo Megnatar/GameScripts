@@ -48,6 +48,23 @@ If (bAutorun = 0) {
     bAutorun--
  }
 Return
+;--------------------------XButton2--------------------------
+XButton2::
+keywait, Xbutton2, D T0.35
+if errorlevel = 0          
+{
+    SendEvent, {6}
+    SendEvent, {Q}
+    SendEvent, {4}
+    return
+}
+else
+{
+    SendEvent, {6}
+    SendEvent, {Q}
+    SendEvent, {5}
+}
+return
 ;--------------------------Lbutton--------------------------
 ~Lbutton::
 bAutorun = 0
