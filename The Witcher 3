@@ -2,13 +2,12 @@
 #SingleInstance force
 #InstallKeybdHook
 #InstallMouseHook
-SetWorkingDir %A_ScriptDir% 
 SetBatchLines, -1 
 DetectHiddenWindows, on
 ListLines, off
 
+GamePath =                ;Add path the the game executable here
 GameExe =  witcher3.exe
-GamePath = D:\Games\The Witcher 3 Wild Hunt\bin\x64\
 WinTitle = The Witcher 3
 bAutorun = 0
 
@@ -32,21 +31,15 @@ IfWinExist, ahk_exe %GameExe%
 #IfWinExist, ahk_group GameWindow
 #IfWinActive, ahk_group GameWindow
 {
-;--------------------------XButton2--------------------------
-XButton2::
-keywait, XButton2
-keywait, XButton2, D T0.4
-If errorlevel = 1
-{
-   SendEvent, {6}{q}{5}
-}
-else 
-{
-    SendEvent, {6}{q}{7}
-}
-return
 ;--------------------------XButton1--------------------------
 XButton1::
+keywait, XButton1
+keywait, XButton1, D T0.2
+If errorlevel = 0
+{
+   SendEvent, {Control}
+   return
+}
 If (bAutorun = 0) {
     SendEvent, {w down}
     bAutorun++
@@ -54,7 +47,17 @@ If (bAutorun = 0) {
     SendEvent, {w up}
     bAutorun--
  }
-Return
+return
+;--------------------------XButton2--------------------------
+XButton2::
+keywait, XButton2
+keywait, XButton2, D T0.2
+If errorlevel = 1 {
+   SendEvent, {6}{q}{5}
+}Else{
+    SendEvent, {6}{q}{7}
+}
+return
 ;--------------------------Lbutton--------------------------
 ~Lbutton::
 bAutorun = 0
