@@ -2,14 +2,12 @@
 #SingleInstance force
 #InstallKeybdHook
 #InstallMouseHook
-SetKeyDelay, 200, 50
-SetWorkingDir %A_ScriptDir% 
 SetBatchLines, -1 
-ListLines, off
 DetectHiddenWindows, on
+ListLines, off
 
-GamePath =                  ;Set path to game executable here. Not including the .exe file it self!!
 GameExe =  witcher3.exe
+GamePath = D:\Games\The Witcher 3 Wild Hunt\bin\x64\
 WinTitle = The Witcher 3
 bAutorun = 0
 
@@ -33,11 +31,6 @@ IfWinExist, ahk_exe %GameExe%
 #IfWinExist, ahk_group GameWindow
 #IfWinActive, ahk_group GameWindow
 {
-;--------------------------6--------------------------
-~6::
-SendEvent, {Q}
-SendEvent, {5}
-return
 ;--------------------------XButton1--------------------------
 XButton1::
 If (bAutorun = 0) {
@@ -50,19 +43,15 @@ If (bAutorun = 0) {
 Return
 ;--------------------------XButton2--------------------------
 XButton2::
-keywait, Xbutton2, D T0.35
-if errorlevel = 0          
+keywait, XButton2
+keywait, XButton2, D T0.3
+If errorlevel = 1
 {
-    SendEvent, {6}
-    SendEvent, {Q}
-    SendEvent, {4}
-    return
+   SendEvent, {6}{q}{5}
 }
-else
+else 
 {
-    SendEvent, {6}
-    SendEvent, {Q}
-    SendEvent, {5}
+    SendEvent, {6}{q}{7}
 }
 return
 ;--------------------------Lbutton--------------------------
@@ -72,129 +61,133 @@ SendEvent, {w up}
 return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
-if CounterRbtn = 1
+if IntRbtn = 1
 {    
-    CounterRbtn++
+    IntRbtn++
 }
 else
 {
-    CounterRbtn = 1
+    IntRbtn = 1
     KeyWait, Rbutton
-    settimer, ClearCounterRbtn, 300
+    settimer, ClearIntRbtn, 300
+    Return
 }
-if CounterRbtn >= 2
+if IntRbtn >= 2
 {
     SendEvent, {q}
-    CounterRbtn =
-    settimer, ClearCounterRbtn, off
+    IntRbtn =
+    settimer, ClearIntRbtn, off
+    Return
 }
-else
 return
 ;--------------------------W--------------------------
 ~W::
 bAutorun = 0
-if CounterW = 1
+if IntW = 1
 {    
-    CounterW++
+    IntW++
 }
 else
 {
-    CounterW = 1
+    IntW = 1
     KeyWait, w
-    settimer, ClearCounterW, 300
+    settimer, ClearIntW, 300
+    Return
 }
-if CounterW >= 2
+if IntW >= 2
 {
     SendEvent, +{w}
-    CounterW =
-    settimer, ClearCounterW, off
+    IntW =
+    settimer, ClearIntW, off
+    Return
 }
-else
 return
 ;--------------------------A--------------------------
 ~A::
-if CounterA = 1
+if IntA = 1
 {    
-    CounterA++
+    IntA++
 }
 else
 {
-    CounterA = 1
+    IntA = 1
     KeyWait, a
-    settimer, ClearCounterA, 300
+    settimer, ClearIntA, 300
+    Return
 }
-if CounterA >= 2
+if IntA >= 2
 {
     SendEvent, +{a}
-    CounterA =
-    settimer, ClearCounterA, off
+    IntA =
+    settimer, ClearIntA, off
+    Return
 }
-else
 return
 ;--------------------------S--------------------------
 ~S::
-if CounterS = 1
+if IntS = 1
 {    
-    CounterS++
+    IntS++
 }
 else
 {
-    CounterS = 1
+    IntS = 1
     KeyWait, s
-    settimer, ClearCounterS, 300
+    settimer, ClearIntS, 300
+    Return
 }
-if CounterS >= 2
+if IntS >= 2
 {
     SendEvent, +{s}
-    CounterS =
-    settimer, ClearCounterS, off
+    IntS =
+    settimer, ClearIntS, off
+    Return
 }
-else
 return
 ;--------------------------D--------------------------
 ~D::
-if CounterD = 1
+if IntD = 1
 {    
-    CounterD++
+    IntD++
 }
 else
 {
-    CounterD = 1
+    IntD = 1
     KeyWait, d
-    settimer, ClearCounterD, 300
+    settimer, ClearIntD, 300
+    Return
 }
-if CounterD >= 2
+if IntD >= 2
 {
     SendEvent, +{d}
-    CounterD =
-    settimer, ClearCounterD, off
+    IntD =
+    settimer, ClearIntD, off
+    Return
 }
-else
 return
-;--------------------------ClearCounterRbtn--------------------------
-ClearCounterRbtn:
-CounterRbtn =
-settimer, ClearCounterRbtn, off
+;--------------------------ClearIntRbtn--------------------------
+ClearIntRbtn:
+IntRbtn =
+settimer, ClearIntRbtn, off
 Return
-;--------------------------ClearCounterW--------------------------
-ClearCounterW:
-CounterW =
-settimer, ClearCounterW, off
+;--------------------------ClearIntW--------------------------
+ClearIntW:
+IntW =
+settimer, ClearIntW, off
 Return
-;--------------------------ClearCounterA--------------------------
-ClearCounterA:
-CounterA =
-settimer, ClearCounterA, off
+;--------------------------ClearIntA--------------------------
+ClearIntA:
+IntA =
+settimer, ClearIntA, off
 Return
-;--------------------------ClearCounterS--------------------------
-ClearCounterS:
-CounterS =
-settimer, ClearCounterS, off
+;--------------------------ClearIntS--------------------------
+ClearIntS:
+IntS =
+settimer, ClearIntS, off
 Return
-;--------------------------ClearCounterD--------------------------
-ClearCounterD:
-CounterD =
-settimer, ClearCounterD, off
+;--------------------------ClearIntD--------------------------
+ClearIntD:
+IntD =
+settimer, ClearIntD, off
 Return
 }
-
