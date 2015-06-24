@@ -7,7 +7,7 @@ DetectHiddenWindows, on
 ListLines, off
 
 GameExe =  witcher3.exe
-GamePath =                ;Add path the the game executable here
+GamePath =                      ;Add path the the game executable here
 WinTitle = The Witcher 3
 bAutorun = 0
 
@@ -35,11 +35,11 @@ IfWinExist, ahk_exe %GameExe%
 XButton1::
 keywait, XButton1
 keywait, XButton1, D T0.2
-If errorlevel = 0
+If (errorlevel = 0) 
 {
    SendEvent, {Control}
    return
-}
+} 
 If (bAutorun = 0) {
     SendEvent, {w down}
     bAutorun++
@@ -52,7 +52,7 @@ return
 XButton2::
 keywait, XButton2
 keywait, XButton2, D T0.2
-If errorlevel = 1 {
+If (errorlevel = 1) {
    SendEvent, {6}{q}{5}
 }Else{
     SendEvent, {6}{q}{7}
