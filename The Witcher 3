@@ -2,6 +2,7 @@
 #SingleInstance force
 #InstallKeybdHook
 #InstallMouseHook
+SetWorkingDir %A_ScriptDir% 
 SetBatchLines, -1 
 DetectHiddenWindows, on
 ListLines, off
@@ -31,6 +32,19 @@ IfWinExist, ahk_exe %GameExe%
 #IfWinExist, ahk_group GameWindow
 #IfWinActive, ahk_group GameWindow
 {
+;--------------------------XButton2--------------------------
+XButton2::
+keywait, XButton2
+keywait, XButton2, D T0.4
+If errorlevel = 1
+{
+   SendEvent, {6}{q}{5}
+}
+else 
+{
+    SendEvent, {6}{q}{7}
+}
+return
 ;--------------------------XButton1--------------------------
 XButton1::
 If (bAutorun = 0) {
@@ -41,19 +55,6 @@ If (bAutorun = 0) {
     bAutorun--
  }
 Return
-;--------------------------XButton2--------------------------
-XButton2::
-keywait, XButton2
-keywait, XButton2, D T0.3
-If errorlevel = 1
-{
-   SendEvent, {6}{q}{5}
-}
-else 
-{
-    SendEvent, {6}{q}{7}
-}
-return
 ;--------------------------Lbutton--------------------------
 ~Lbutton::
 bAutorun = 0
@@ -61,18 +62,14 @@ SendEvent, {w up}
 return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
-if IntRbtn = 1
+if IntRbtn = 
 {    
     IntRbtn++
-}
-else
-{
-    IntRbtn = 1
     KeyWait, Rbutton
     settimer, ClearIntRbtn, 300
     Return
 }
-if IntRbtn >= 2
+if IntRbtn >= 1
 {
     SendEvent, {q}
     IntRbtn =
@@ -83,18 +80,14 @@ return
 ;--------------------------W--------------------------
 ~W::
 bAutorun = 0
-if IntW = 1
+if IntW = 
 {    
     IntW++
-}
-else
-{
-    IntW = 1
     KeyWait, w
     settimer, ClearIntW, 300
     Return
 }
-if IntW >= 2
+if IntW >= 1
 {
     SendEvent, +{w}
     IntW =
@@ -104,18 +97,14 @@ if IntW >= 2
 return
 ;--------------------------A--------------------------
 ~A::
-if IntA = 1
+if IntA = 
 {    
     IntA++
-}
-else
-{
-    IntA = 1
     KeyWait, a
     settimer, ClearIntA, 300
     Return
 }
-if IntA >= 2
+if IntA >= 1
 {
     SendEvent, +{a}
     IntA =
@@ -125,18 +114,14 @@ if IntA >= 2
 return
 ;--------------------------S--------------------------
 ~S::
-if IntS = 1
+if IntS = 
 {    
     IntS++
-}
-else
-{
-    IntS = 1
     KeyWait, s
     settimer, ClearIntS, 300
     Return
 }
-if IntS >= 2
+if IntS >= 1
 {
     SendEvent, +{s}
     IntS =
@@ -146,18 +131,14 @@ if IntS >= 2
 return
 ;--------------------------D--------------------------
 ~D::
-if IntD = 1
+if IntD = 
 {    
     IntD++
-}
-else
-{
-    IntD = 1
     KeyWait, d
     settimer, ClearIntD, 300
     Return
 }
-if IntD >= 2
+if IntD >= 1
 {
     SendEvent, +{d}
     IntD =
