@@ -7,7 +7,7 @@ SetKeyDelay, 20, 5
 ListLines, off
 
 GameExe =  witcher3.exe
-GamePath =                      ;Add path you're the game executable here
+GamePath =                      ;Add path to the game executable to the variable GamePath 
 WinTitle = The Witcher 3
 bAutorun = 0
 
