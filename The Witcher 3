@@ -1,13 +1,13 @@
 #NoEnv  
+#KeyHistory 0
 #SingleInstance force
-#InstallKeybdHook
-#InstallMouseHook
-SetBatchLines, -1 
 DetectHiddenWindows, on
+SetBatchLines, -1 
+SetKeyDelay, 20, 5
 ListLines, off
 
 GameExe =  witcher3.exe
-GamePath =                      ;Add path the the game executable here
+GamePath =                      ;Add path you're the game executable here
 WinTitle = The Witcher 3
 bAutorun = 0
 
@@ -65,113 +65,113 @@ SendEvent, {w up}
 return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
-if IntRbtn = 
+if varRbtn = 
 {    
-    IntRbtn++
+    varRbtn++
     KeyWait, Rbutton
-    settimer, ClearIntRbtn, 300
+    settimer, ClearvarRbtn, 300
     Return
 }
-if IntRbtn >= 1
+if varRbtn >= 1
 {
     SendEvent, {q}
-    IntRbtn =
-    settimer, ClearIntRbtn, off
+    varRbtn =
+    settimer, ClearvarRbtn, off
     Return
 }
 return
 ;--------------------------W--------------------------
 ~W::
 bAutorun = 0
-if IntW = 
+if varW = 
 {    
-    IntW++
+    varW++
     KeyWait, w
-    settimer, ClearIntW, 300
+    settimer, ClearvarW, 300
     Return
 }
-if IntW >= 1
+if varW >= 1
 {
     SendEvent, +{w}
-    IntW =
-    settimer, ClearIntW, off
+    varW =
+    settimer, ClearvarW, off
     Return
 }
 return
 ;--------------------------A--------------------------
 ~A::
-if IntA = 
+if varA = 
 {    
-    IntA++
+    varA++
     KeyWait, a
-    settimer, ClearIntA, 300
+    settimer, ClearvarA, 300
     Return
 }
-if IntA >= 1
+if varA >= 1
 {
     SendEvent, +{a}
-    IntA =
-    settimer, ClearIntA, off
+    varA =
+    settimer, ClearvarA, off
     Return
 }
 return
 ;--------------------------S--------------------------
 ~S::
-if IntS = 
+if varS = 
 {    
-    IntS++
+    varS++
     KeyWait, s
-    settimer, ClearIntS, 300
+    settimer, ClearvarS, 300
     Return
 }
-if IntS >= 1
+if varS >= 1
 {
     SendEvent, +{s}
-    IntS =
-    settimer, ClearIntS, off
+    varS =
+    settimer, ClearvarS, off
     Return
 }
 return
 ;--------------------------D--------------------------
 ~D::
-if IntD = 
+if varD = 
 {    
-    IntD++
+    varD++
     KeyWait, d
-    settimer, ClearIntD, 300
+    settimer, ClearvarD, 300
     Return
 }
-if IntD >= 1
+if varD >= 1
 {
     SendEvent, +{d}
-    IntD =
-    settimer, ClearIntD, off
+    varD =
+    settimer, ClearvarD, off
     Return
 }
 return
-;--------------------------ClearIntRbtn--------------------------
-ClearIntRbtn:
-IntRbtn =
-settimer, ClearIntRbtn, off
+;--------------------------ClearvarRbtn--------------------------
+ClearvarRbtn:
+varRbtn =
+settimer, ClearvarRbtn, off
 Return
-;--------------------------ClearIntW--------------------------
-ClearIntW:
-IntW =
-settimer, ClearIntW, off
+;--------------------------ClearvarW--------------------------
+ClearvarW:
+varW =
+settimer, ClearvarW, off
 Return
-;--------------------------ClearIntA--------------------------
-ClearIntA:
-IntA =
-settimer, ClearIntA, off
+;--------------------------ClearvarA--------------------------
+ClearvarA:
+varA =
+settimer, ClearvarA, off
 Return
-;--------------------------ClearIntS--------------------------
-ClearIntS:
-IntS =
-settimer, ClearIntS, off
+;--------------------------ClearvarS--------------------------
+ClearvarS:
+varS =
+settimer, ClearvarS, off
 Return
-;--------------------------ClearIntD--------------------------
-ClearIntD:
-IntD =
-settimer, ClearIntD, off
+;--------------------------ClearvarD--------------------------
+ClearvarD:
+varD =
+settimer, ClearvarD, off
 Return
 }
