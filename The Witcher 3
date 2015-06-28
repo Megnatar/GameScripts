@@ -1,8 +1,8 @@
 /*
 [Variables]
-GameExe=
-GamePath=
-WinTitle=
+GameExe=witcher3.exe
+GamePath=D:\Games\The Witcher 3 Wild Hunt\bin\x64
+WinTitle=The Witcher 3
 */
 #NoEnv  
 #SingleInstance force
@@ -12,6 +12,10 @@ SetBatchLines, -1
 DetectHiddenWindows, on
 SetKeyDelay, 20, 5
 SetWorkingDir %A_ScriptDir%
+
+bAutorun = 0
+bFocus = 0
+TimerPeriod := 300
 
 IfExist,%A_ScriptName%
 {
@@ -59,13 +63,6 @@ if (GamePath = "" || GameExe = "" )
 		IniWrite, %GameExe%, %A_ScriptName%, Variables, GameExe
 	}
 }
-bAutorun = 0
-bFocus = 0
-TimerPeriod := 300
-
-GroupAdd, GameWindow, %WinTitle%
-GroupAdd, GameWindow, ahk_exe %GameExe%
-
 IfWinNotExist, ahk_exe %GameExe%
 {
     run,%GameExe%, %GamePath%,,Process_ID
@@ -86,6 +83,8 @@ IfWinExist, ahk_exe %GameExe%
     Process, WaitClose, %Process_ID%
     ExitApp
 }
+GroupAdd, GameWindow, %WinTitle%
+GroupAdd, GameWindow, ahk_exe %GameExe%
 #IfWinActive, ahk_group GameWindow
 {
 ;--------------------------Tab--------------------------
