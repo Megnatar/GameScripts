@@ -1,15 +1,67 @@
+/*
+[Variables]
+GameExe=
+GamePath=
+WinTitle=
+*/
 #NoEnv  
-#KeyHistory 0
 #SingleInstance force
-DetectHiddenWindows, on
-SetBatchLines, -1 
-SetKeyDelay, 20, 5
+#KeyHistory 0
 ListLines, off
+SetBatchLines, -1
+DetectHiddenWindows, on
+SetKeyDelay, 20, 5
+SetWorkingDir %A_ScriptDir%
 
-GameExe =  witcher3.exe
-GamePath =                      ;Add path to the game executable to the variable GamePath 
-WinTitle = The Witcher 3
+IfExist,%A_ScriptName%
+{
+    IniRead, GameExe, %A_ScriptName%, Variables, GameExe
+    IniRead, GamePath, %A_ScriptName%, Variables, GamePath
+    IniRead, WinTitle, %A_ScriptName%, Variables, WinTitle
+}
+again:
+if (GamePath = "" || GameExe = "" ) 
+{
+	If (GamePath = "" )
+	{
+		InputBox,GamePath,,Set here the path to where the game executable is located. Don't use quotes and exclude the executable!,,700,130,,,,,
+	}
+	If (ErrorLevel = 1)
+	{
+		Exitapp
+	}
+	If (ErrorLevel = 0)
+	{  
+		If (GamePath = "")
+		{
+			MsgBox,,,Please tell me where to find the game,5
+			gosub, Again
+		}
+		Else
+		IniWrite, %GamePath%, %A_ScriptName%, Variables, GamePath
+	}
+	If (GameExe = "" )
+	{
+		InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
+	}
+	If (ErrorLevel = 1)
+	{
+		Exitapp
+	}
+	If (ErrorLevel = 0)
+	{  
+		If (GameExe = "")
+		{
+			MsgBox,,,Please tell me the name of the executable you trying to launch,5
+			gosub, Again
+		}
+		Else
+		IniWrite, %GameExe%, %A_ScriptName%, Variables, GameExe
+	}
+}
 bAutorun = 0
+bFocus = 0
+TimerPeriod := 300
 
 GroupAdd, GameWindow, %WinTitle%
 GroupAdd, GameWindow, ahk_exe %GameExe%
@@ -17,6 +69,12 @@ GroupAdd, GameWindow, ahk_exe %GameExe%
 IfWinNotExist, ahk_exe %GameExe%
 {
     run,%GameExe%, %GamePath%,,Process_ID
+    WinWait ahk_pid %Process_ID%	
+    If (WinTitle = "")
+	{
+        WinGetActiveTitle, WinTitle
+        IniWrite, %WinTitle%, %A_ScriptName%, Variables, WinTitle
+	}
     Process, WaitClose, %Process_ID%
     ExitApp
 }
@@ -28,9 +86,18 @@ IfWinExist, ahk_exe %GameExe%
     Process, WaitClose, %Process_ID%
     ExitApp
 }
-#IfWinExist, ahk_group GameWindow
 #IfWinActive, ahk_group GameWindow
 {
+;--------------------------Tab--------------------------
+Tab::
+If (bFocus = 0) {
+    SendEvent, {Tab down}
+    bFocus++
+}Else{
+    SendEvent, {Tab up}
+    bFocus--
+ }
+return
 ;--------------------------XButton1--------------------------
 XButton1::
 keywait, XButton1
@@ -39,7 +106,8 @@ If (errorlevel = 0)
 {
    SendEvent, {Control}
    return
-} 
+}
+Else
 If (bAutorun = 0) {
     SendEvent, {w down}
     bAutorun++
@@ -60,118 +128,122 @@ If (errorlevel = 1) {
 return
 ;--------------------------Lbutton--------------------------
 ~Lbutton::
-bAutorun = 0
 SendEvent, {w up}
+bAutorun = 0
 return
 ;--------------------------Rbutton--------------------------
-~Rbutton:: 
-if varRbtn = 
+~Rbutton::
+SendEvent, {Tab up}
+bFocus = 0
+if VarRbtn = 
 {    
-    varRbtn++
+    VarRbtn++
     KeyWait, Rbutton
-    settimer, ClearvarRbtn, 300
+    settimer, ClearVarRbtn, %TimerPeriod%
     Return
 }
-if varRbtn >= 1
+if VarRbtn >= 1
 {
     SendEvent, {q}
-    varRbtn =
-    settimer, ClearvarRbtn, off
+    VarRbtn =
+    settimer, ClearVarRbtn, off
     Return
 }
+SendEvent, {Tab up}
+bFocus = 0
 return
 ;--------------------------W--------------------------
 ~W::
 bAutorun = 0
-if varW = 
+if VarW = 
 {    
-    varW++
+    VarW++
     KeyWait, w
-    settimer, ClearvarW, 300
+    settimer, ClearVarW, %TimerPeriod%
     Return
 }
-if varW >= 1
+if VarW >= 1
 {
-    SendEvent, +{w}
-    varW =
-    settimer, ClearvarW, off
+    SendEvent, {space down}{w}{space up}
+    VarW =
+    settimer, ClearVarW, off
     Return
 }
 return
 ;--------------------------A--------------------------
 ~A::
-if varA = 
+if VarA = 
 {    
-    varA++
+    VarA++
     KeyWait, a
-    settimer, ClearvarA, 300
+    settimer, ClearVarA, %TimerPeriod%
     Return
 }
-if varA >= 1
+if VarA >= 1
 {
-    SendEvent, +{a}
-    varA =
-    settimer, ClearvarA, off
+    SendEvent, {space down}{a}{space up}
+    VarA =
+    settimer, ClearVarA, off
     Return
 }
 return
 ;--------------------------S--------------------------
 ~S::
-if varS = 
+if VarS = 
 {    
-    varS++
+    VarS++
     KeyWait, s
-    settimer, ClearvarS, 300
+    settimer, ClearVarS, %TimerPeriod%
     Return
 }
-if varS >= 1
+if VarS >= 1
 {
-    SendEvent, +{s}
-    varS =
-    settimer, ClearvarS, off
+    SendEvent, {space down}{s}{space up}
+    VarS =
+    settimer, ClearVarS, off
     Return
 }
 return
 ;--------------------------D--------------------------
 ~D::
-if varD = 
+if VarD = 
 {    
-    varD++
+    VarD++
     KeyWait, d
-    settimer, ClearvarD, 300
+    settimer, ClearVarD, %TimerPeriod%
     Return
 }
-if varD >= 1
+if VarD >= 1
 {
-    SendEvent, +{d}
-    varD =
-    settimer, ClearvarD, off
+    SendEvent, {space down}{d}{space up}
+    VarD =
+    settimer, ClearVarD, off
     Return
 }
 return
-;--------------------------ClearvarRbtn--------------------------
-ClearvarRbtn:
-varRbtn =
-settimer, ClearvarRbtn, off
+;--------------------------ClearVarRbtn--------------------------
+ClearVarRbtn:
+VarRbtn =
+settimer, ClearVarRbtn, off
 Return
-;--------------------------ClearvarW--------------------------
-ClearvarW:
-varW =
-settimer, ClearvarW, off
+;--------------------------ClearVarW--------------------------
+ClearVarW:
+VarW =
+settimer, ClearVarW, off
 Return
-;--------------------------ClearvarA--------------------------
-ClearvarA:
-varA =
-settimer, ClearvarA, off
+;--------------------------ClearVarA--------------------------
+ClearVarA:
+VarA =
+settimer, ClearVarA, off
 Return
-;--------------------------ClearvarS--------------------------
-ClearvarS:
-varS =
-settimer, ClearvarS, off
+;--------------------------ClearVarS--------------------------
+ClearVarS:
+VarS =
+settimer, ClearVarS, off
 Return
-;--------------------------ClearvarD--------------------------
-ClearvarD:
-varD =
-settimer, ClearvarD, off
+;--------------------------ClearVarD--------------------------
+ClearVarD:
+VarD =
+settimer, ClearVarD, off
 Return
 }
