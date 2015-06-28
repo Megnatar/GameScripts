@@ -1,8 +1,8 @@
 /*
 [Variables]
-GameExe=witcher3.exe
-GamePath=D:\Games\The Witcher 3 Wild Hunt\bin\x64
-WinTitle=The Witcher 3
+GameExe=
+GamePath=
+WinTitle=
 */
 #NoEnv  
 #SingleInstance force
