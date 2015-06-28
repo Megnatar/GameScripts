@@ -148,8 +148,6 @@ if VarRbtn >= 1
     settimer, ClearVarRbtn, off
     Return
 }
-SendEvent, {Tab up}
-bFocus = 0
 return
 ;--------------------------W--------------------------
 ~W::
