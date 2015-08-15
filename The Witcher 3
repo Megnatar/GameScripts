@@ -1,16 +1,19 @@
 /*
 [Variables]
 GameExe=
-GamePath=
-WinTitle=
+GamePath=                                                              
+WinTitle=The Witcher 3
+WinClass=W2ViewportClass
 */
+;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
 #NoEnv  
+#Persistent
 #SingleInstance force
+#NoTrayIcon
 #KeyHistory 0
-ListLines, off
-SetBatchLines, -1
-DetectHiddenWindows, on
-SetKeyDelay, 20, 5
+ListLines,off
+SetBatchLines,-1
+SetKeyDelay,20,5
 SetWorkingDir %A_ScriptDir%
 
 bAutorun = 0
@@ -19,228 +22,289 @@ TimerPeriod := 300
 
 IfExist,%A_ScriptName%
 {
-    IniRead, GameExe, %A_ScriptName%, Variables, GameExe
-    IniRead, GamePath, %A_ScriptName%, Variables, GamePath
-    IniRead, WinTitle, %A_ScriptName%, Variables, WinTitle
+    IniRead,GameExe,%A_ScriptName%,Variables,GameExe
+    IniRead,GamePath,%A_ScriptName%,Variables,GamePath
+    IniRead,WinTitle,%A_ScriptName%,Variables,WinTitle
+    IniRead,WinClass,%A_ScriptName%,Variables,WinClass
 }
+;--------------------------Asking For User Input when variables at the top of this script are blank--------------------------
 again:
 if (GamePath = "" || GameExe = "" ) 
 {
-	If (GamePath = "" )
-	{
-		InputBox,GamePath,,Set here the path to where the game executable is located. Don't use quotes and exclude the executable!,,700,130,,,,,
-	}
-	If (ErrorLevel = 1)
-	{
-		Exitapp
-	}
-	If (ErrorLevel = 0)
-	{  
-		If (GamePath = "")
-		{
-			MsgBox,,,Please tell me where to find the game,5
-			gosub, Again
-		}
-		Else
-		IniWrite, %GamePath%, %A_ScriptName%, Variables, GamePath
-	}
-	If (GameExe = "" )
-	{
-		InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
-	}
-	If (ErrorLevel = 1)
-	{
-		Exitapp
-	}
-	If (ErrorLevel = 0)
-	{  
-		If (GameExe = "")
-		{
-			MsgBox,,,Please tell me the name of the executable you trying to launch,5
-			gosub, Again
-		}
-		Else
-		IniWrite, %GameExe%, %A_ScriptName%, Variables, GameExe
-	}
+    If (GamePath = "" )
+    {
+        	InputBox,GamePath,,Here you need to write the path to where the game executable is located. Exclude the executable,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GamePath = "")
+        {
+            MsgBox,,,Please tell me where to find the game,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GamePath%,%A_ScriptName%,Variables,GamePath
+    }
+    If (GameExe = "" )
+    {
+        InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GameExe = "")
+        {
+            MsgBox,,,Please tell me the name of the executable you trying to launch,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GameExe%,%A_ScriptName%,Variables,GameExe
+    }
 }
-IfWinNotExist, ahk_exe %GameExe%
+;--------------------------Starting the game and getting WindowClass and Tittle--------------------------
+IfWinNotExist,ahk_exe %GameExe%
 {
-    run,%GameExe%, %GamePath%,,Process_ID
-    WinWait ahk_pid %Process_ID%	
+    run,%GameExe%,%GamePath%,,Process_ID
+     WinWait ahk_pid %Process_ID%   
     If (WinTitle = "")
-	{
-        WinGetActiveTitle, WinTitle
-        IniWrite, %WinTitle%, %A_ScriptName%, Variables, WinTitle
-	}
-    Process, WaitClose, %Process_ID%
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
     ExitApp
 }
 else
-IfWinExist, ahk_exe %GameExe%
+IfWinExist,ahk_exe %GameExe%
 {
-    WinActivate, %WinTitle%
-    WinGet, Process_ID, PID, ahk_exe %GameExe%
-    Process, WaitClose, %Process_ID%
+    WinActivate,%WinTitle%
+    WinGet,Process_ID,PID,ahk_exe %GameExe%
+    If (WinTitle = "")
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
     ExitApp
 }
-GroupAdd, GameWindow, %WinTitle%
-GroupAdd, GameWindow, ahk_exe %GameExe%
-#IfWinActive, ahk_group GameWindow
+;--------------------------Hotkey section--------------------------
+#IfWinActive,ahk_group GameWindow
 {
 ;--------------------------Tab--------------------------
 Tab::
 If (bFocus = 0) {
-    SendEvent, {Tab down}
-    bFocus++
+    SendEvent,{Tab down}
+    bFocus=1  
 }Else{
-    SendEvent, {Tab up}
-    bFocus--
+    SendEvent,{Tab up}
+    bFocus=0
  }
 return
 ;--------------------------XButton1--------------------------
 XButton1::
-keywait, XButton1
-keywait, XButton1, D T0.2
+keywait,XButton1
+keywait,XButton1,D T0.2
 If (errorlevel = 0) 
 {
-   SendEvent, {Control}
+   SendEvent,{Control}
    return
 }
 Else
 If (bAutorun = 0) {
-    SendEvent, {w down}
+    SendEvent,{w down}
     bAutorun++
 }Else{
-    SendEvent, {w up}
+    SendEvent,{w up}
     bAutorun--
  }
 return
 ;--------------------------XButton2--------------------------
 XButton2::
-keywait, XButton2
-keywait, XButton2, D T0.2
+keywait,XButton2
+keywait,XButton2,D T0.2
 If (errorlevel = 1) {
-   SendEvent, {6}{q}{5}
+   SendEvent,{6}{q}{5}
 }Else{
-    SendEvent, {6}{q}{7}
+    SendEvent,{6}{q}{7}
+}
+return
+;--------------------------Mbutton--------------------------
+Mbutton::
+keywait,Mbutton
+keywait,Mbutton,D T0.2
+If (errorlevel = 1) {
+   SendEvent,{6}{q}{3}
+}Else{
+    SendEvent,{6}{q}{4}
 }
 return
 ;--------------------------Lbutton--------------------------
-~Lbutton::
-SendEvent, {w up}
+Lbutton::
+keywait,Lbutton,T0.32
+if (errorlevel = 1) 
+{
+    while GetKeyState("Lbutton","P") 
+    {
+        SendEvent,{Lbutton down}        
+        KeyWait,Lbutton 
+    }
+    SendEvent,{Lbutton up}  
+return 
+}
+else
+keywait,Lbutton,D T0.32  
+if (errorlevel = 0)          
+{
+    sleep,300
+    while GetKeyState("Lbutton","P")
+    {
+        SendEvent,{shift down}{w down}
+        KeyWait,Lbutton    
+        SendEvent,{shift up}
+    }
+    return               
+ }
+else 
+SendEvent,{w up}
 bAutorun = 0
-return
+return 
 ;--------------------------Rbutton--------------------------
-~Rbutton::
-SendEvent, {Tab up}
-bFocus = 0
-if VarRbtn = 
+~Rbutton:: 
+if varRbtn = 
 {    
-    VarRbtn++
-    KeyWait, Rbutton
-    settimer, ClearVarRbtn, %TimerPeriod%
+    varRbtn++
+    KeyWait,Rbutton
+    settimer,ClearvarRbtn,%TimerPeriod%
     Return
 }
-if VarRbtn >= 1
+if varRbtn >= 1
 {
-    SendEvent, {q}
-    VarRbtn =
-    settimer, ClearVarRbtn, off
+    SendEvent,{q}
+    varRbtn =
+    settimer,ClearvarRbtn,off
     Return
 }
 return
 ;--------------------------W--------------------------
 ~W::
 bAutorun = 0
-if VarW = 
+if varW = 
 {    
-    VarW++
-    KeyWait, w
-    settimer, ClearVarW, %TimerPeriod%
+    varW++
+    KeyWait,w
+    settimer,ClearvarW,%TimerPeriod%
     Return
 }
-if VarW >= 1
+if varW >= 1
 {
-    SendEvent, {space down}{w}{space up}
-    VarW =
-    settimer, ClearVarW, off
+    SendEvent,{space down}{w}{space up}        ;If  you rather use dodge,remove everything after the comma and add this: +{w}
+    VarW =                                                              ;Maybe SetKeyDelay will need some adjustment. If it doesn't work set it to 100,50
+    settimer,ClearvarW,off
     Return
 }
 return
 ;--------------------------A--------------------------
 ~A::
-if VarA = 
+if varA = 
 {    
-    VarA++
-    KeyWait, a
-    settimer, ClearVarA, %TimerPeriod%
+    varA++
+    KeyWait,a
+    settimer,ClearvarA,%TimerPeriod%
     Return
 }
-if VarA >= 1
+if varA >= 1
 {
-    SendEvent, {space down}{a}{space up}
-    VarA =
-    settimer, ClearVarA, off
+    SendEvent,{space down}{w}{space up}
+    varA =
+    settimer,ClearvarA,off
     Return
 }
 return
 ;--------------------------S--------------------------
 ~S::
-if VarS = 
+if varS = 
 {    
-    VarS++
-    KeyWait, s
-    settimer, ClearVarS, %TimerPeriod%
+    varS++
+    KeyWait,s
+    settimer,ClearvarS,%TimerPeriod%
     Return
 }
-if VarS >= 1
+if varS >= 1
 {
-    SendEvent, {space down}{s}{space up}
-    VarS =
-    settimer, ClearVarS, off
+    SendEvent,{space down}{s}{space up}
+    varS =
+    settimer,ClearvarS,off
     Return
 }
 return
 ;--------------------------D--------------------------
 ~D::
-if VarD = 
+if varD = 
 {    
-    VarD++
-    KeyWait, d
-    settimer, ClearVarD, %TimerPeriod%
+    varD++
+    KeyWait,d
+    settimer,ClearvarD,%TimerPeriod%
     Return
 }
-if VarD >= 1
+if varD >= 1
 {
-    SendEvent, {space down}{d}{space up}
-    VarD =
-    settimer, ClearVarD, off
+    SendEvent,{space down}{d}{space up}
+    varD =
+    settimer,ClearvarD,off
     Return
 }
 return
-;--------------------------ClearVarRbtn--------------------------
-ClearVarRbtn:
-VarRbtn =
-settimer, ClearVarRbtn, off
+;--------------------------ClearvarRbtn--------------------------
+ClearvarRbtn:
+varRbtn =
+settimer,ClearvarRbtn,off
 Return
-;--------------------------ClearVarW--------------------------
-ClearVarW:
-VarW =
-settimer, ClearVarW, off
+;--------------------------ClearvarW--------------------------
+ClearvarW:
+varW =
+settimer,ClearvarW,off
 Return
-;--------------------------ClearVarA--------------------------
-ClearVarA:
-VarA =
-settimer, ClearVarA, off
+;--------------------------ClearvarA--------------------------
+ClearvarA:
+varA =
+settimer,ClearvarA,off
 Return
-;--------------------------ClearVarS--------------------------
-ClearVarS:
-VarS =
-settimer, ClearVarS, off
+;--------------------------ClearvarS--------------------------
+ClearvarS:
+varS =
+settimer,ClearvarS,off
 Return
-;--------------------------ClearVarD--------------------------
-ClearVarD:
-VarD =
-settimer, ClearVarD, off
+;--------------------------ClearvarD--------------------------
+ClearvarD:
+varD =
+WinClass=DXGIFocusProxyWindow
+settimer,ClearvarD,off
 Return
 }
