@@ -1,0 +1,223 @@
+/*
+[Variables]
+GameExe=
+GamePath=                                                               
+WinTitle=
+WinClass=
+*/
+;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
+#NoEnv  
+#Persistent
+#SingleInstance force
+#NoTrayIcon
+#KeyHistory 0
+ListLines,off
+SetBatchLines,-1
+SetKeyDelay,20,5
+SetWorkingDir %A_ScriptDir%
+
+bAutorun = 0
+bFocus = 0
+TimerPeriod := 300
+
+IfExist,%A_ScriptName%
+{
+    IniRead,GameExe,%A_ScriptName%,Variables,GameExe
+    IniRead,GamePath,%A_ScriptName%,Variables,GamePath
+    IniRead,WinTitle,%A_ScriptName%,Variables,WinTitle
+    IniRead,WinClass,%A_ScriptName%,Variables,WinClass
+}
+;--------------------------Asking For User Input when variables at the top of this script are blank--------------------------
+again:
+if (GamePath = "" || GameExe = "" ) 
+{
+    If (GamePath = "" )
+    {
+        	InputBox,GamePath,,Here you need to write the path to where the game executable is located. Exclude the executable,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GamePath = "")
+        {
+            MsgBox,,,Please tell me where to find the game,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GamePath%,%A_ScriptName%,Variables,GamePath
+    }
+    If (GameExe = "" )
+    {
+        InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GameExe = "")
+        {
+            MsgBox,,,Please tell me the name of the executable you trying to launch,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GameExe%,%A_ScriptName%,Variables,GameExe
+    }
+}
+;--------------------------Starting the game and getting WindowClass and Tittle--------------------------
+IfWinNotExist,ahk_exe %GameExe%
+{
+    run,%GameExe%,%GamePath%,,Process_ID
+     WinWait ahk_pid %Process_ID%   
+    If (WinTitle = "")
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
+    ExitApp
+}
+else
+IfWinExist,ahk_exe %GameExe%
+{
+    WinActivate,%WinTitle%
+    WinGet,Process_ID,PID,ahk_exe %GameExe%
+    If (WinTitle = "")
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
+    ExitApp
+}
+;--------------------------Hotkey section--------------------------
+#IfWinActive,ahk_group GameWindow
+{
+;--------------------------Mbutton-------------------------
+Mbutton::
+    SendEvent, {v down}{v up}
+    SendEvent, {f down}{f up}
+    SendEvent, {Rbutton down}
+    bRbutton = 1
+Return
+
+;--------------------------Xbutton2-------------------------
+XButton2::
+If (bAutorun = 0) {
+    SendEvent, {w down}
+    SendEvent, {Rbutton down}
+    bAutorun = 1
+}Else{
+    SendEvent, {w up}
+    SendEvent, {Rbutton down}
+    bAutorun = 0
+ }
+Return
+;--------------------------Xbutton1-------------------------
+XButton1::
+SendEvent, {8 down}{8 up}
+Return
+
+~P::
+~I::
+~M::
+SendEvent, {Rbutton up}
+bRbutton = 0
+return
+;--------------------------Lbutton-------------------------
+~$LButton::  
+SendEvent, {w up}
+bAutorun = 0
+;SendEvent, {click}
+keywait, Lbutton, T0.35
+if errorlevel = 1 
+while GetKeyState("LButton", "P") 
+    {
+        SendEvent,{2}
+        SendEvent,{3}
+        SendEvent,{4}
+    }
+return
+;--------------------------Rbutton-------------------------
+Rbutton::
+keywait, Rbutton, T0.35
+if errorlevel = 1 
+{
+    while GetKeyState("Rbutton", "P") 
+    {
+        SendEvent, {Rbutton down}
+        KeyWait, Rbutton
+        SendEvent, {Rbutton up}
+    }
+return
+}
+else
+keywait, Rbutton, D T0.35
+if errorlevel = 0          
+{
+    If (bRbutton = 0) {
+        SendEvent, {Rbutton down}
+        bRbutton =  1
+    }Else{
+        SendEvent, {Rbutton up}
+        bRbutton = 0
+        }
+ }
+ else
+ SendEvent, {Rbutton down}{Rbutton up}
+ bRbutton = 0
+ return
+}
+ ;--------------------------W-------------------------
+ /*
+ ~W::
+ keywait, W, T0.15
+if errorlevel = 1 
+{
+    while GetKeyState("W", "P") 
+    {
+        SendEvent, {W down}
+        KeyWait, W
+        SendEvent, {W up}
+    }
+}
+else
+ settimer, RollSubRoutine, 400
+{
+        RCount++
+}
+Return
+
+RollSubRoutine:
+If RCount >= 2
+{
+   SendEvent, {7 down}{7 up}	
+}	
+RCount=0
+return
+*/
+}
