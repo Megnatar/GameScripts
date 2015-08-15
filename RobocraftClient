@@ -1,0 +1,145 @@
+/*
+[Variables]
+GameExe=
+GamePath=                                                   
+WinTitle=
+WinClass=
+*/
+;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
+#NoEnv  
+#Persistent
+#SingleInstance force
+#NoTrayIcon
+#KeyHistory 0
+ListLines,off
+SetBatchLines,-1
+SetKeyDelay,20,5
+SetWorkingDir %A_ScriptDir%
+
+bAutorun = 0
+bFocus = 0
+TimerPeriod := 300
+
+IfExist,%A_ScriptName%
+{
+    IniRead,GameExe,%A_ScriptName%,Variables,GameExe
+    IniRead,GamePath,%A_ScriptName%,Variables,GamePath
+    IniRead,WinTitle,%A_ScriptName%,Variables,WinTitle
+    IniRead,WinClass,%A_ScriptName%,Variables,WinClass
+}
+;--------------------------Asking For User Input when variables at the top of this script are blank--------------------------
+again:
+if (GamePath = "" || GameExe = "" ) 
+{
+    If (GamePath = "" )
+    {
+        	InputBox,GamePath,,Here you need to write the path to where the game executable is located. Exclude the executable,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GamePath = "")
+        {
+            MsgBox,,,Please tell me where to find the game,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GamePath%,%A_ScriptName%,Variables,GamePath
+    }
+    If (GameExe = "" )
+    {
+        InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
+    }
+    If (ErrorLevel = 1)
+    {
+        Exitapp
+    }
+    If (ErrorLevel = 0)
+    {  
+        If (GameExe = "")
+        {
+            MsgBox,,,Please tell me the name of the executable you trying to launch,5
+            gosub,Again
+        }
+        Else
+        IniWrite,%GameExe%,%A_ScriptName%,Variables,GameExe
+    }
+}
+;--------------------------Starting the game and getting WindowClass and Tittle--------------------------
+IfWinNotExist,ahk_exe %GameExe%
+{
+    run,%GameExe%,%GamePath%,,Process_ID
+     WinWait ahk_pid %Process_ID%   
+    If (WinTitle = "")
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
+    ExitApp
+}
+else
+IfWinExist,ahk_exe %GameExe%
+{
+    WinActivate,%WinTitle%
+    WinGet,Process_ID,PID,ahk_exe %GameExe%
+    If (WinTitle = "")
+    {
+        Sleep,1000
+        WinGetActiveTitle,WinTitle
+        Sleep,1000
+        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+    }
+    If (WinClass = "")
+    {
+        Sleep,1000
+        WinGetClass,WinClass
+        Sleep,1000
+        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+    }
+    GroupAdd,GameWindow,ahk_class %WinClass%
+    Process,WaitClose,%Process_ID%
+    ExitApp
+}
+;--------------------------Hotkey section--------------------------
+#IfWinActive,ahk_group GameWindow
+{
+XButton2::
+If (bAutorun = 0) {
+    SendEvent, {w down}
+    bAutorun = 1
+}Else{
+    SendEvent, {w up}
+    bAutorun = 0
+ }
+Return
+
+~w::
+    bAutorun = 0
+    KeyWait, w
+    SendEvent, {w up}
+return
+
+~Lbutton::
+while GetKeyState("Lbutton","P") 
+    {
+        ;SendEvent,{Lbutton down}        
+        KeyWait,Lbutton 
+    }
+SendEvent,{w up}
+bAutorun = 0
+return 
+}
