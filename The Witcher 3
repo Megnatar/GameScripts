@@ -172,10 +172,10 @@ if (errorlevel = 1)
 {
     while GetKeyState("Lbutton","P") 
     {
-        SendEvent,{Lbutton down}        
+        ;SendEvent,{Lbutton down}        
         KeyWait,Lbutton 
     }
-    SendEvent,{Lbutton up}  
+    ;SendEvent,{Lbutton up}  
 return 
 }
 else
