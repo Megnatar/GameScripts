@@ -5,7 +5,7 @@ GamePath=
 WinTitle=The Witcher 3
 WinClass=W2ViewportClass
 */
-;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
+;--------------------------AutoExecute Section. Ends where first return is encountered-------------------------
 #NoEnv  
 #Persistent
 #SingleInstance force
