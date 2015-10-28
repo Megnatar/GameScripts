@@ -1,7 +1,7 @@
 /*
 [Variables]
-GameExe=
-GamePath=                                                              
+GameExe=witcher3.exe
+GamePath=                                                            
 WinTitle=The Witcher 3
 WinClass=W2ViewportClass
 */
@@ -9,16 +9,14 @@ WinClass=W2ViewportClass
 #NoEnv  
 #Persistent
 #SingleInstance force
-#NoTrayIcon
 #KeyHistory 0
 ListLines,off
 SetBatchLines,-1
-SetKeyDelay,20,5
+SetKeyDelay, 100, 50
 SetWorkingDir %A_ScriptDir%
 
 bAutorun = 0
 bFocus = 0
-TimerPeriod := 300
 
 IfExist,%A_ScriptName%
 {
@@ -51,7 +49,7 @@ if (GamePath = "" || GameExe = "" )
     }
     If (GameExe = "" )
     {
-        InputBox,GameExe,,Set here the name of the executable.,,700,130,,,,,
+       InputBox,GameExe,,What is the name of the executable you want to start`, e.g "Game.exe".,,700,130,,,,,
     }
     If (ErrorLevel = 1)
     {
@@ -69,242 +67,208 @@ if (GamePath = "" || GameExe = "" )
     }
 }
 ;--------------------------Starting the game and getting WindowClass and Tittle--------------------------
-IfWinNotExist,ahk_exe %GameExe%
+IfWinNotExist, ahk_exe %GameExe%
 {
     run,%GameExe%,%GamePath%,,Process_ID
-     WinWait ahk_pid %Process_ID%   
+    WinWait ahk_pid %Process_ID%   
     If (WinTitle = "")
     {
-        Sleep,1000
-        WinGetActiveTitle,WinTitle
-        Sleep,1000
-        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+        Sleep, 5000
+        WinGetActiveTitle, WinTitle
+        Sleep, 5000
+        IniWrite, %WinTitle%,%A_ScriptName%,Variables,WinTitle
     }
     If (WinClass = "")
     {
-        Sleep,1000
+        Sleep, 5000
         WinGetClass,WinClass
-        Sleep,1000
-        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+        Sleep, 5000
+        IniWrite, %WinClass%, %A_ScriptName%, Variables, WinClass
     }
-    GroupAdd,GameWindow,ahk_class %WinClass%
-    Process,WaitClose,%Process_ID%
+    GroupAdd, GameWindow, ahk_class %WinClass%
+    Process, WaitClose, %Process_ID%
     ExitApp
 }
 else
-IfWinExist,ahk_exe %GameExe%
+IfWinExist, ahk_exe %GameExe%
 {
-    WinActivate,%WinTitle%
-    WinGet,Process_ID,PID,ahk_exe %GameExe%
+    WinActivate, %WinTitle%
+    WinGet, Process_ID, PID, ahk_exe %GameExe%
     If (WinTitle = "")
     {
-        Sleep,1000
-        WinGetActiveTitle,WinTitle
-        Sleep,1000
-        IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
+        Sleep, 5000
+        WinGetActiveTitle, WinTitle
+        Sleep, 5000
+        IniWrite, %WinTitle%, %A_ScriptName%, Variables,WinTitle
     }
     If (WinClass = "")
     {
-        Sleep,1000
-        WinGetClass,WinClass
-        Sleep,1000
-        IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
+        Sleep, 5000
+        WinGetClass, WinClass
+        Sleep, 5000
+        IniWrite, %WinClass%, %A_ScriptName%, Variables,WinClass
     }
-    GroupAdd,GameWindow,ahk_class %WinClass%
-    Process,WaitClose,%Process_ID%
+    GroupAdd, GameWindow, ahk_class %WinClass%
+    Process, WaitClose, %Process_ID%
     ExitApp
 }
 ;--------------------------Hotkey section--------------------------
-#IfWinActive,ahk_group GameWindow
+#IfWinActive, ahk_group GameWindow
 {
 ;--------------------------Tab--------------------------
 Tab::
 If (bFocus = 0) {
-    SendEvent,{Tab down}
+    Sendevent, {Tab down}
     bFocus=1  
 }Else{
-    SendEvent,{Tab up}
-    bFocus=0
+    Sendevent, {Tab up}
+    bFocus = 0
  }
 return
 ;--------------------------XButton1--------------------------
 XButton1::
-keywait,XButton1
-keywait,XButton1,D T0.2
-If (errorlevel = 0) 
+keywait, XButton1, T0.20
+If errorlevel = 0
 {
-   SendEvent,{Control}
-   return
+	KeyWait, XButton1, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {control down}{control up}
+	}
+    else
+    If errorlevel = 1
+    {
+        If (bAutorun = 0){
+            Sendevent, {w down}
+            bAutorun++
+        }Else{
+            Sendevent, {w up}
+            bAutorun--
+        }
+    }
 }
-Else
-If (bAutorun = 0) {
-    SendEvent,{w down}
-    bAutorun++
-}Else{
-    SendEvent,{w up}
-    bAutorun--
- }
 return
 ;--------------------------XButton2--------------------------
 XButton2::
-keywait,XButton2
-keywait,XButton2,D T0.2
-If (errorlevel = 1) {
-   SendEvent,{6}{q}{5}
-}Else{
-    SendEvent,{6}{q}{7}
+keywait, XButton2, T0.20
+If errorlevel = 0
+{
+	KeyWait, XButton2, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {6 down}{6 up}{q down}{q up}{5 down}{5 up}
+	}
+    Else
+    If errorlevel = 1
+    {
+        Sendevent, {6 down}{6 up}{q down}{q up}{7 down}{7 up}
+    }
 }
 return
 ;--------------------------Mbutton--------------------------
 Mbutton::
-keywait,Mbutton
-keywait,Mbutton,D T0.2
-If (errorlevel = 1) {
-   SendEvent,{6}{q}{3}
-}Else{
-    SendEvent,{6}{q}{4}
+keywait, Mbutton, T0.20
+If errorlevel = 0
+{
+	KeyWait, Mbutton, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {6 down}{6 up}{q down}{q up}{3 down}{3 up}
+	}
+    Else
+    If errorlevel = 1
+    {
+        Sendevent, {6 down}{6 up}{q down}{q up}{4 down}{4 up}
+    }
 }
 return
 ;--------------------------Lbutton--------------------------
-Lbutton::
-keywait,Lbutton,T0.32
-if (errorlevel = 1) 
-{
-    while GetKeyState("Lbutton","P") 
-    {
-        ;SendEvent,{Lbutton down}        
-        KeyWait,Lbutton 
-    }
-    ;SendEvent,{Lbutton up}  
-return 
+Lbutton:: 
+keywait, Lbutton, T0.20                                                    ;Waits 200ms for Lbutton to be released(UP). As soon as Lbutton is released errorlevel is set to 0 and the script will execute its apropriate action
+If errorlevel = 0
+{                                                                                                                                                          ;Double Click
+	KeyWait, Lbutton, D T0.20                                            ;Waits 200ms to check if Lbutton is pressed again. Again, if a second keydown status is detected errorlevel is set to zero and the undelaying commonds are executed.
+	If errorlevel = 0
+	{
+		Sendevent, {Shift down}
+		Sendevent, {w down}
+		KeyWait, Lbutton
+		Sendevent, {Shift up}
+	}
+	Else                                                                                                                                            ;Single Click
+	If errorlevel = 1                                                              ;If Lbutton was not pressed a second time keywait will time out and set errolevel to 1
+	{
+		Sendevent, {Lbutton down}{Lbutton up}
+		Sendevent, {w up}
+	}
 }
-else
-keywait,Lbutton,D T0.32  
-if (errorlevel = 0)          
+Else                                                                                                                                                ;Key down status.
+if errorlevel = 1                                                                   ;This errorlevel belongs to the first keywait command, it's set to 1 meaning Lbutton is still pressed down.
+while GetKeyState("Lbutton", "P") 
 {
-    sleep,300
-    while GetKeyState("Lbutton","P")
-    {
-        SendEvent,{shift down}{w down}
-        KeyWait,Lbutton    
-        SendEvent,{shift up}
-    }
-    return               
- }
-else 
-SendEvent,{w up}
-bAutorun = 0
-return 
+	KeyWait, Lbutton                                                           ;Telling the script to wait here for Lbutton to be released. If you don't the while loop will spam the key like crazy. It could potantially crash you're application or OS.
+	Break
+}
+return
 ;--------------------------Rbutton--------------------------
 ~Rbutton:: 
-if varRbtn = 
-{    
-    varRbtn++
-    KeyWait,Rbutton
-    settimer,ClearvarRbtn,%TimerPeriod%
-    Return
-}
-if varRbtn >= 1
+keywait, Rbutton, T0.20
+If errorlevel = 0
 {
-    SendEvent,{q}
-    varRbtn =
-    settimer,ClearvarRbtn,off
-    Return
+	KeyWait, Rbutton, D T0.20
+	If errorlevel = 0
+	{
+        Sendevent, {q down}{q up}
+	}
 }
 return
 ;--------------------------W--------------------------
-~W::
-bAutorun = 0
-if varW = 
-{    
-    varW++
-    KeyWait,w
-    settimer,ClearvarW,%TimerPeriod%
-    Return
-}
-if varW >= 1
+~w::
+keywait, w, T0.20
+If errorlevel = 0
 {
-    SendEvent,{space down}{w}{space up}        ;If  you rather use dodge,remove everything after the comma and add this: +{w}
-    VarW =                                                              ;Maybe SetKeyDelay will need some adjustment. If it doesn't work set it to 100,50
-    settimer,ClearvarW,off
-    Return
+	KeyWait,w, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {space down}{w down}{w up}{space up}
+	}
 }
 return
 ;--------------------------A--------------------------
-~A::
-if varA = 
-{    
-    varA++
-    KeyWait,a
-    settimer,ClearvarA,%TimerPeriod%
-    Return
-}
-if varA >= 1
+~a::
+keywait, a, T0.20
+If errorlevel = 0
 {
-    SendEvent,{space down}{w}{space up}
-    varA =
-    settimer,ClearvarA,off
-    Return
+	KeyWait, a, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {space down}{a down}{a up}{space up}
+	}
 }
 return
 ;--------------------------S--------------------------
-~S::
-if varS = 
-{    
-    varS++
-    KeyWait,s
-    settimer,ClearvarS,%TimerPeriod%
-    Return
-}
-if varS >= 1
+~s::
+keywait, s, T0.20
+If errorlevel = 0
 {
-    SendEvent,{space down}{s}{space up}
-    varS =
-    settimer,ClearvarS,off
-    Return
+	KeyWait, s, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {space down}{s down}{s up}{space up}
+	}
 }
 return
 ;--------------------------D--------------------------
-~D::
-if varD = 
-{    
-    varD++
-    KeyWait,d
-    settimer,ClearvarD,%TimerPeriod%
-    Return
-}
-if varD >= 1
+~d::
+keywait, d, T0.20
+If errorlevel = 0
 {
-    SendEvent,{space down}{d}{space up}
-    varD =
-    settimer,ClearvarD,off
-    Return
+	KeyWait, d, D T0.20
+	If errorlevel = 0
+	{
+		Sendevent, {space down}{d down}{d up}{space up}
+	}
 }
 return
-;--------------------------ClearvarRbtn--------------------------
-ClearvarRbtn:
-varRbtn =
-settimer,ClearvarRbtn,off
-Return
-;--------------------------ClearvarW--------------------------
-ClearvarW:
-varW =
-settimer,ClearvarW,off
-Return
-;--------------------------ClearvarA--------------------------
-ClearvarA:
-varA =
-settimer,ClearvarA,off
-Return
-;--------------------------ClearvarS--------------------------
-ClearvarS:
-varS =
-settimer,ClearvarS,off
-Return
-;--------------------------ClearvarD--------------------------
-ClearvarD:
-varD =
-WinClass=DXGIFocusProxyWindow
-settimer,ClearvarD,off
-Return
 }
+;--------------------------The End--------------------------
