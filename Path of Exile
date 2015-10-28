@@ -1,21 +1,22 @@
 /*
 [Variables]
 GameExe=
-GamePath=                                                      
-WinTitle=
-WinClass=
+GamePath=                                               
+WinTitle=Path of Exile
+WinClass=Direct3DWindowClass
 */
 ;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
 #NoEnv  
-#Persistent
-#SingleInstance force
-#NoTrayIcon
 #KeyHistory 0
-ListLines,off
-SetBatchLines,-1
-SetKeyDelay,20,5
+#SingleInstance force
+SetTitleMatchMode  1
+SetTitleMatchMode Fast
+SendMode, Input
+ListLines off
+SetBatchLines -1
 SetWorkingDir %A_ScriptDir%
 
+{
 IfExist,%A_ScriptName%
 {
     IniRead,GameExe,%A_ScriptName%,Variables,GameExe
@@ -71,16 +72,16 @@ IfWinNotExist,ahk_exe %GameExe%
      WinWait ahk_pid %Process_ID%   
     If (WinTitle = "")
     {
-        Sleep,1000
+        Sleep, 5000
         WinGetActiveTitle,WinTitle
-        Sleep,1000
+        Sleep, 5000
         IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
     }
     If (WinClass = "")
     {
-        Sleep,1000
+        Sleep, 5000
         WinGetClass,WinClass
-        Sleep,1000
+        Sleep, 5000
         IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
     }
     GroupAdd,GameWindow,ahk_class %WinClass%
@@ -94,47 +95,122 @@ IfWinExist,ahk_exe %GameExe%
     WinGet,Process_ID,PID,ahk_exe %GameExe%
     If (WinTitle = "")
     {
-        Sleep,1000
+        Sleep,5000
         WinGetActiveTitle,WinTitle
-        Sleep,1000
+        Sleep,5000
         IniWrite,%WinTitle%,%A_ScriptName%,Variables,WinTitle
     }
     If (WinClass = "")
     {
-        Sleep,1000
+        Sleep, 5000
         WinGetClass,WinClass
-        Sleep,1000
+        Sleep,5000
         IniWrite,%WinClass%,%A_ScriptName%,Variables,WinClass
     }
     GroupAdd,GameWindow,ahk_class %WinClass%
     Process,WaitClose,%Process_ID%
     ExitApp
+    }
 }
 ;--------------------------Hotkey section--------------------------
 #IfWinActive,ahk_group GameWindow
+{    
+HPPot = 0
+MPot = 0
+
+XButton2::
+XButton1::
+If HPPot = 0
 {
-~Lbutton::
-keywait,Lbutton,T0.2
-if (errorlevel = 1) 
-{
-    while GetKeyState("Lbutton","P") 
-    { 
-        KeyWait,Lbutton 
-    }
-return 
+   Send, {1 down}{1 up}
+    HPPot++
+    Return
 }
-else
-keywait,Lbutton,D T0.2
-if (errorlevel = 0)          
+If HPPot = 1
+{  
+    Send, {2 down}{2 up}
+    HPPot ++
+    Return
+}
+If HPPot = 2
+{  
+    Send, {3 down}{3 up}
+    HPPot = 0
+}
+Return
+
+F::
+If MPot = 0
 {
-    while GetKeyState("Lbutton","P")
+   Send, {4 down}{4 up}
+    MPot++
+    Return
+}
+If MPot = 1
+{  
+    Send, {5 down}{5 up}
+    MPot = 0
+}
+Return
+
+Mbutton::
+Send, {Shift down}
+Send, {Mbutton down}{Mbutton up}
+sleep, 800
+Send, {d down}{d up}
+Send, {shift up}
+Return
+
+Lbutton:: 
+KeyWait, Lbutton, D T0.15
+If errorlevel = 0
+{
+    Send, {Lbutton down}
+    KeyWait, Lbutton
+    Send, {Lbutton up}
+}
+Else
+KeyWait, Lbutton, T0.15
+If errorlevel = 0
+{
+    KeyWait,Lbutton, D T0.15
+    If errorlevel = 0
     {
-        SendEvent,{shift down}
-        KeyWait,Lbutton    
-        SendEvent,{shift up}
+        Send, {Shift down}
+        KeyWait, Lbutton
+        Send, {Shift up}
     }
-    return               
- }
-else 
-return 
+} 
+return
+
+Rbutton:: 
+keywait, Rbutton, T0.15
+If errorlevel = 0
+{
+	KeyWait,Rbutton, D T0.15
+	If errorlevel = 0
+	{
+        Send, {shift down}
+        Send, {s down}
+        KeyWait, RButton
+        Send, {s up}
+        Send, {shift up}
+	}
+	Else
+	If errorlevel = 1
+	{
+		Send, {click right}
+	}
+}
+Else
+if errorlevel = 1
+while GetKeyState("Rbutton", "P") 
+{
+    Send, {a down}{a up}
+    Send, {Rbutton down}
+    KeyWait, Rbutton
+    Send, {Rbutton up}
+	Break
+}
+return
 }
