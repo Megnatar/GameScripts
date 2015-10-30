@@ -18,8 +18,7 @@ SetBatchLines, -1		;Never sleep script in between execution, 'while its running'
 SetWorkingDir, %A_ScriptDir%	;Set the script to use it's full folder path as it's working directory. In variable A_ScriptDir, the last backslash is excluded.
 
 IntF = 0
-IntClick = 1
-Key := IntClick
+Key := 1
 
 IfExist,%A_ScriptName%
 {
@@ -124,21 +123,17 @@ IfWinExist,ahk_exe %GameExe%
 { 
 ;--------------------------Thumb ButtonOne send's 1, next click 2, next click 3,  next click 1 etc...--------------------------
 XButton1::
-If(IntClick >= 3)
+If(Key >= 3)
 {  
     Send, %Key%
-    
-    IntClick = 1
-    Key := IntClick
+    Key - 2
     return
 }
 else
-If(IntClick := IntClick)
+If(Key := Key)
 {
    Send, %Key%
-   
-   IntClick++
-   Key := IntClick
+   Key++
 }
 Return
 
