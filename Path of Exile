@@ -121,19 +121,18 @@ IfWinExist,ahk_exe %GameExe%
 ;--------------------------Hotkey/Window operation section--------------------------
 #IfWinActive, ahk_group GameWindow
 { 
-;--------------------------Thumb ButtonOne send's 1, next click 2, next click 3,  next click 1 etc...--------------------------
 XButton1::
 If(Key >= 3)
 {  
     Send, %Key%
-    Key - 2
+    Key := Key-2
     return
 }
 else
 If(Key := Key)
 {
    Send, %Key%
-   Key++
+    Key++
 }
 Return
 
