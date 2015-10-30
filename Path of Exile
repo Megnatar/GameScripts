@@ -1,6 +1,6 @@
 /*
 [Variables]
-GameExe=PathOfExileSteam.exe
+GameExe=
 GamePath=                                                      
 WinTitle=Path of Exile
 WinClass=Direct3DWindowClass
