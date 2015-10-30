@@ -127,6 +127,7 @@ XButton1::
 If(IntClick >= 3)
 {  
     Send, %Key%
+    
     IntClick = 1
     Key := IntClick
     return
@@ -135,6 +136,7 @@ else
 If(IntClick := IntClick)
 {
    Send, %Key%
+   
    IntClick++
    Key := IntClick
 }
