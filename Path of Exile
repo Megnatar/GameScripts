@@ -121,6 +121,7 @@ IfWinExist,ahk_exe %GameExe%
 ;--------------------------Hotkey/Window operation section--------------------------
 #IfWinActive, ahk_group GameWindow
 { 
+;--------------------------Mouse thumb button 1 Loops throught key's 1 2, and 3. Eatch click send one key--------------------------
 XButton1::
 If(Key >= 3)
 {  
@@ -132,7 +133,7 @@ else
 If(Key := Key)
 {
    Send, %Key%
-    Key++
+   Key++
 }
 Return
 
