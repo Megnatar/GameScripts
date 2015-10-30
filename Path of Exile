@@ -7,18 +7,17 @@ WinClass=Direct3DWindowClass
 */
 ;--------------------------AutoExecute Section. Ends where first return is encountered--------------------------
 ;.
-#NoEnv													;Empty variables will not be checkt if there system environment variables.
-#Persistent												;Script may not close until it recieves a ExitApp command.
-#KeyHistory 0										;Not needed when only running the script.
-ListLines, off											;Not needed when only running the script.
-SetTitleMatchMode, 3							;Must be a exact match to the window title.
-SendMode, Input									;Send command uses the input method. Will ignore SetKeyDelay.
-SetKeyDelay, 100, 50							;Delay for sending keystrokes and press duration time. For use with SendEvent.
-SetBatchLines, -1									;Never sleep script in between execution, 'while its running'. Maximum cpu clock.
-SetWorkingDir, %A_ScriptDir%			;Set the script to use it's full folder path as it's working directory. In variable A_ScriptDir, the last backslash is excluded.
+#NoEnv				;Empty variables will not be checkt if there system environment variables.
+#Persistent			;Script may not close until it recieves a ExitApp command.
+#KeyHistory 0			;Not needed when only running the script.
+ListLines, off			;Not needed when only running the script.
+SetTitleMatchMode, 3		;Must be a exact match to the window title.
+SendMode, Input			;Send command uses the input method. Will ignore SetKeyDelay.
+SetKeyDelay, 100, 50		;Delay for sending keystrokes and press duration time. For use with SendEvent.
+SetBatchLines, -1		;Never sleep script in between execution, 'while its running'. Maximum cpu clock.
+SetWorkingDir, %A_ScriptDir%	;Set the script to use it's full folder path as it's working directory. In variable A_ScriptDir, the last backslash is excluded.
 
-HPPot = 0
-MPot = 0
+IntF = 0
 IntClick = 1
 Key := IntClick
 
@@ -142,16 +141,16 @@ If(IntClick := IntClick)
 Return
 
 F::
-If MThumb2 = 0
+If IntF = 0
 {
    Send, {4 down}{4 up}
-    MThumb2++
+    IntF++
     Return
 }
-If MThumb2 = 1
+If IntF = 1
 {  
     Send, {5 down}{5 up}
-    MThumb2 = 0
+    IntF = 0
 }
 Return
 
